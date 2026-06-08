@@ -53,15 +53,18 @@ function parseRow(row: (string | number)[]): StoreRow {
 }
 
 export async function fetchDashboardData(sheetName?: string): Promise<DashboardData> {
-  const base = process.env.APPS_SCRIPT_URL;
+  const base =
+    typeof window !== "undefined"
+      ? process.env.NEXT_PUBLIC_APPS_SCRIPT_URL
+      : process.env.NEXT_PUBLIC_APPS_SCRIPT_URL ?? process.env.APPS_SCRIPT_URL;
 
   if (!base) {
-    throw new Error("APPS_SCRIPT_URL nao configurada. Veja o arquivo .env.local.example");
+    throw new Error("NEXT_PUBLIC_APPS_SCRIPT_URL nao configurada. Veja .env.local.example");
   }
 
   const url = sheetName ? `${base}?sheet=${encodeURIComponent(sheetName)}` : base;
 
-  const res = await fetch(url, { next: { revalidate: 300 } });
+  const res = await fetch(url, { cache: "no-store" });
 
   if (!res.ok) {
     throw new Error(`Erro ao buscar dados: ${res.status}`);
