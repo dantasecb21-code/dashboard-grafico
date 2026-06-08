@@ -7,6 +7,7 @@ import KpiCards from "@/components/KpiCards";
 import RevenueChart from "@/components/RevenueChart";
 import DirectorChart from "@/components/DirectorChart";
 import QualityChart from "@/components/QualityChart";
+import CancellationChart from "@/components/CancellationChart";
 import StoresTable from "@/components/StoresTable";
 
 export default function Home() {
@@ -94,7 +95,10 @@ export default function Home() {
           <DirectorChart stores={stores} />
         </div>
 
-        <QualityChart stores={stores} />
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <QualityChart stores={stores} />
+          <CancellationChart stores={stores} topN={20} />
+        </div>
 
         <StoresTable stores={stores} />
       </div>

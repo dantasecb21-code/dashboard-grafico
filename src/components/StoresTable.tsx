@@ -117,18 +117,12 @@ export default function StoresTable({ stores }: Props) {
               <Th label="Venda" k="venda" />
               <Th label="Desvio" k="desvioMeta" />
               <Th label="Ticket" k="ticketMedio" />
-              <th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
-                Cancelam.
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
-                SLA Prep.
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
-                SLA Entr.
-              </th>
-              <th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
-                Tempo On
-              </th>
+              <Th label="Cancelam." k="cancelamento" />
+              <Th label="Ruptura" k="rupturaItem" />
+              <Th label="NSU" k="nsu" />
+              <Th label="SLA Prep." k="slaPreparo" />
+              <Th label="SSLA Entr." k="slaEntrega" />
+              <Th label="Tempo On" k="tempoOn" />
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -168,6 +162,8 @@ export default function StoresTable({ stores }: Props) {
                   {s.ticketMedio > 0 ? formatCurrency(s.ticketMedio) : "—"}
                 </td>
                 <td className="px-3 py-2">{badge(s.cancelamento, 5, true)}</td>
+                <td className="px-3 py-2">{badge(s.rupturaItem, 5, true)}</td>
+                <td className="px-3 py-2">{badge(s.nsu, 12, true)}</td>
                 <td className="px-3 py-2">{badge(s.slaPreparo, 85)}</td>
                 <td className="px-3 py-2">{badge(s.slaEntrega, 85)}</td>
                 <td className="px-3 py-2">{badge(s.tempoOn, 95)}</td>
