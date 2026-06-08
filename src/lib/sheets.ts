@@ -2,6 +2,8 @@ import { StoreRow, SheetResponse, DashboardData } from "@/types/sheets";
 
 function parseCurrency(val: unknown): number {
   if (val === null || val === undefined || val === "") return 0;
+  // Apps Script can return the number already parsed
+  if (typeof val === "number") return val;
   const s = String(val)
     .replace(/R\$\s?/g, "")
     .replace(/\s/g, "")
@@ -14,9 +16,13 @@ function parseCurrency(val: unknown): number {
 
 function parsePercent(val: unknown): number {
   if (val === null || val === undefined || val === "") return 0;
+  // Apps Script returns percentages as decimals (0.0452 = 4.52%)
+  if (typeof val === "number") return val <= 1.5 ? val * 100 : val;
   const s = String(val).replace("%", "").replace(",", ".").trim();
   if (s === "-" || s === "" || s.startsWith("#")) return 0;
-  return parseFloat(s) || 0;
+  const n = parseFloat(s) || 0;
+  // String percentages like "4,52" (already in %) stay as-is
+  return n;
 }
 
 function parseRow(row: (string | number)[]): StoreRow {
@@ -73,7 +79,8 @@ export async function fetchDashboardData(sheetName?: string): Promise<DashboardD
   const json: SheetResponse = await res.json();
 
   const stores = (json.rows ?? [])
-    .filter((row) => row.length >= 8 && String(row[4] ?? "").trim() !== "")
+    // Filtra apenas linhas reais de loja: col[3] deve ser número (código) e col[4] nome da loja
+    .filter((row) => row.length >= 8 && typeof row[3] === "number" && String(row[4] ?? "").trim() !== "")
     .map(parseRow);
 
   return {
